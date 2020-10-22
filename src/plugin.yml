@@ -1,0 +1,10 @@
+name: RandomTP
+author: Enzoooo_
+version: 1.0
+api-version: 1.16
+main: fr.enzoooo.randomtp.Main
+
+commands:
+  rtp:
+    aliases: randomtp
+    description: Vous téléporte aléatoirement sur la map
