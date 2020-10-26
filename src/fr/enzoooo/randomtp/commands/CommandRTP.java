@@ -1,5 +1,6 @@
 package fr.enzoooo.randomtp.commands;
 
+import fr.enzoooo.randomtp.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -16,8 +17,8 @@ public class CommandRTP implements CommandExecutor {
         if(sender instanceof Player){
             Player p = (Player) sender;
             if(p.hasPermission("randomtp.use")){
-                int max = 2500;
-                int min = 300;
+                int max = Main.getInstance().getConfig().getInt("distance-max");
+                int min = Main.getInstance().getConfig().getInt("distance-min");
 
                 int x = new Random().nextInt(max - min) + min;
                 int z = new Random().nextInt(max - min) + min;
@@ -36,8 +37,8 @@ public class CommandRTP implements CommandExecutor {
             if (args.length == 1){
                 Player p = Bukkit.getPlayer(args[0]);
                 if(p != null && p.isOnline()){
-                    int max = 2500;
-                    int min = 300;
+                    int max = Main.getInstance().getConfig().getInt("distance-max");
+                    int min = Main.getInstance().getConfig().getInt("distance-min");
 
                     int x = new Random().nextInt(max - min) + min;
                     int z = new Random().nextInt(max - min) + min;
