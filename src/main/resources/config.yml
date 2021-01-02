@@ -3,3 +3,6 @@
 # Réglages de la portée du randomTP depuis le spawn du monde
 distance-max: 2500
 distance-min: 300
+
+# Réglages du temps du cooldown
+cooldown: 30

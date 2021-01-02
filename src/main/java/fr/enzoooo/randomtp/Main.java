@@ -16,7 +16,6 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        System.out.println("");
 
         new UpdateChecker(this, 85077).getVersion(version -> {
             if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
