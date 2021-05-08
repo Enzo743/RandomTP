@@ -1,72 +1,45 @@
 package fr.enzoooo.randomtp.commands;
 
-import fr.enzoooo.randomtp.Main;
+import fr.enzoooo.randomtp.managers.RTPManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 public class CommandRTP implements CommandExecutor {
-
-    private Map<Player, Long> tpCooldown = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player){
             Player p = (Player) sender;
+            if (args.length == 0) {
+                RTPManager.cooldown(p);
 
-            if(tpCooldown.containsKey(p)){
-                long time = (System.currentTimeMillis() - tpCooldown.get(p)) / 1000;
-
-                if(time < Main.getInstance().getConfig().getLong("cooldown")){
-                    p.sendMessage("§cMerci de patienter entre chaque téléportement !");
-                    return false;
+                if(p.hasPermission("randomtp.use")){
+                    RTPManager.randomTP(p);
                 } else {
-                    tpCooldown.remove(p);
+                    p.sendMessage("§cVous n'avez pas le droit d'executer cette commande !");
+                }
+            } else if (args.length == 1) {
+                Player player = Bukkit.getPlayer(args[0]);
+                if (player != null && player.isOnline()){
+                    RTPManager.cooldown(p);
+
+                    if(p.hasPermission("randomtp.others")){
+                        RTPManager.randomTP(player);
+                        p.sendMessage("§aLe joueur §5" + p + "§aà bien été téléporté aléatoirement !");
+                    } else {
+                        p.sendMessage("§cVous n'avez pas la permission de téléporter un autre joueur !");
+                    }
                 }
             }
 
-            if(p.hasPermission("randomtp.use")){
-                int max = Main.getInstance().getConfig().getInt("distance-max");
-                int min = Main.getInstance().getConfig().getInt("distance-min");
-
-                int x = new Random().nextInt(max - min) + min;
-                int z = new Random().nextInt(max - min) + min;
-
-                Location loc = new Location(p.getWorld(), x, 0, z);
-
-                int y = loc.getWorld().getHighestBlockYAt(loc) + 3;
-                loc.setY(y);
-
-                p.teleport(loc);
-                p.sendMessage("§aVous avez bien été téléporté aléatoirement en §7" + x + " " + y + " " + z);
-                tpCooldown.put(p, System.currentTimeMillis());
-            } else {
-                p.sendMessage("§cVous n'avez pas le droit d'executer cette commande !");
-            }
         } else {
-            if (args.length == 1){
+            if (args.length == 1) {
                 Player p = Bukkit.getPlayer(args[0]);
-                if(p != null && p.isOnline()){
-                    int max = Main.getInstance().getConfig().getInt("distance-max");
-                    int min = Main.getInstance().getConfig().getInt("distance-min");
-
-                    int x = new Random().nextInt(max - min) + min;
-                    int z = new Random().nextInt(max - min) + min;
-
-                    Location loc = new Location(p.getWorld(), x, 0, z);
-
-                    int y = loc.getWorld().getHighestBlockYAt(loc) + 3;
-                    loc.setY(y);
-
-                    p.teleport(loc);
-                    p.sendMessage("§aVous avez été téléporté aléatoirement en §7" + x + " " + y + " " + z);
+                if(p != null && p.isOnline()) {
+                    RTPManager.randomTP(p);
                 } else {
                     sender.sendMessage("§cLe joueur specifie n'existe pas ou n'est pas connecter !");
                 }
